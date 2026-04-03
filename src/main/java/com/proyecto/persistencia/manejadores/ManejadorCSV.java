@@ -5,6 +5,8 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.proyecto.persistencia.dominio.empleado.Empleado;
 import com.proyecto.persistencia.excepciones.PersistenciaException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 public class ManejadorCSV implements IManejadorArchivos<List<Empleado>> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ManejadorCSV.class);
+
     @Override
     public void guardar(List<Empleado> empleados, String rutaArchivo) throws PersistenciaException {
         try (Writer writer = new FileWriter(rutaArchivo, StandardCharsets.UTF_8)) {
@@ -28,7 +32,7 @@ public class ManejadorCSV implements IManejadorArchivos<List<Empleado>> {
                     .build();
             
             beanToCsv.write(empleados);
-            System.out.println("Archivo CSV guardado exitosamente en: " + rutaArchivo);
+            logger.info("Archivo CSV guardado exitosamente en: {}", rutaArchivo);
         } catch (Exception e) {
             throw new com.proyecto.persistencia.excepciones.ErrorLecturaEscrituraException("Error al guardar el archivo CSV: " + e.getMessage(), e);
         }
@@ -43,7 +47,7 @@ public class ManejadorCSV implements IManejadorArchivos<List<Empleado>> {
                     .build()
                     .parse();
                     
-            System.out.println("Archivo CSV leído exitosamente.");
+            logger.info("Archivo CSV leído exitosamente.");
             return empleados;
         } catch (FileNotFoundException e) {
             throw new com.proyecto.persistencia.excepciones.ArchivoNoEncontradoException("No se encontró el archivo CSV: " + rutaArchivo, e);

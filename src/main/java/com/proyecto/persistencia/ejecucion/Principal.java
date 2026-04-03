@@ -7,6 +7,8 @@ import com.proyecto.persistencia.dominio.pedidos.Producto;
 import com.proyecto.persistencia.excepciones.PersistenciaException;
 import com.proyecto.persistencia.manejadores.*;
 import com.proyecto.persistencia.utilidades.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Scanner;
  */
 public class Principal {
 
+    private static final Logger logger = LoggerFactory.getLogger(Principal.class);
     private static final String SEPARADOR = "\n-----------------------------------------\n";
 
     public static void main(String[] args) {
@@ -33,15 +36,15 @@ public class Principal {
         int opcion = 0;
 
         do {
-            System.out.println("\n=========================================");
-            System.out.println("  MENÚ DE EJEMPLOS DE PERSISTENCIA (OOP)");
-            System.out.println("=========================================");
-            System.out.println("1. Ejecutar Persistencia en TXT  [Dominio: Biblioteca / Libro]");
-            System.out.println("2. Ejecutar Persistencia en CSV  [Dominio: Empresa / Empleado]");
-            System.out.println("3. Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]");
-            System.out.println("4. Ejecutar Persistencia en XML  [Dominio: Ventas / Pedido]");
-            System.out.println("5. Ejecutar Todos");
-            System.out.println("0. Salir");
+            logger.info("\n========================================="
+                    + "\n  MENÚ DE EJEMPLOS DE PERSISTENCIA (OOP)"
+                    + "\n========================================="
+                    + "\n1. Ejecutar Persistencia en TXT  [Dominio: Biblioteca / Libro]"
+                    + "\n2. Ejecutar Persistencia en CSV  [Dominio: Empresa / Empleado]"
+                    + "\n3. Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]"
+                    + "\n4. Ejecutar Persistencia en XML  [Dominio: Ventas / Pedido]"
+                    + "\n5. Ejecutar Todos"
+                    + "\n0. Salir");
             System.out.print("Seleccione una opción: ");
 
             try {
@@ -49,8 +52,6 @@ public class Principal {
             } catch (NumberFormatException e) {
                 opcion = -1;
             }
-
-            System.out.println();
 
             switch (opcion) {
                 case 1:
@@ -67,26 +68,26 @@ public class Principal {
                     break;
                 case 5:
                     ejecutarTXT(scanner);
-                    System.out.println(SEPARADOR);
+                    logger.info(SEPARADOR);
                     ejecutarCSV(scanner);
-                    System.out.println(SEPARADOR);
+                    logger.info(SEPARADOR);
                     ejecutarJSON(scanner);
-                    System.out.println(SEPARADOR);
+                    logger.info(SEPARADOR);
                     ejecutarXML(scanner);
                     break;
                 case 0:
-                    System.out.println("Saliendo del programa...");
+                    logger.info("Saliendo del programa...");
                     break;
                 default:
-                    System.out.println("Opción no válida. Intente de nuevo.");
+                    logger.warn("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 0);
 
         scanner.close();
 
-        System.out.println("\n=========================================");
-        System.out.println("            PROCESO FINALIZADO");
-        System.out.println("=========================================");
+        logger.info("\n========================================="
+                + "\n            PROCESO FINALIZADO"
+                + "\n=========================================");
     }
 
     private static String solicitarRutaArchivo(Scanner scanner, String formatoExtension, String rutaPorDefecto) {
@@ -105,28 +106,27 @@ public class Principal {
         try {
             manejador.guardar(datosOriginales, ruta);
             T datosLeidos = manejador.leer(ruta);
-            System.out.println("Datos recuperados del " + formato + ":");
+            logger.info("Datos recuperados del {}:", formato);
             
             if (datosLeidos instanceof Iterable) {
                 for (Object item : (Iterable<?>) datosLeidos) {
-                    System.out.println(" - " + item);
+                    logger.info(" - {}", item);
                 }
-            } else if (datosLeidos instanceof Pedido) {
-                Pedido pedido = (Pedido) datosLeidos;
-                System.out.println(" - " + pedido);
+            } else if (datosLeidos instanceof Pedido pedido) {
+                logger.info(" - {}", pedido);
                 for (Producto p : pedido.getProductos()) {
-                    System.out.println("   * " + p);
+                    logger.info("   * {}", p);
                 }
             } else {
-                System.out.println(" - " + datosLeidos);
+                logger.info(" - {}", datosLeidos);
             }
         } catch (PersistenciaException e) {
-            System.err.println("Falla de capa persistencia (" + formato + "): " + e.getMessage());
+            logger.error("Falla de capa persistencia ({}): {}", formato, e.getMessage());
         }
     }
 
     private static void ejecutarTXT(Scanner scanner) {
-        System.out.println(">> PERSISTENCIA EN TXT <<");
+        logger.info(">> PERSISTENCIA EN TXT <<");
         String ruta = solicitarRutaArchivo(scanner, ".txt", Constants.RUTA_TXT);
         IManejadorArchivos<List<Libro>> manejador = new ManejadorTXT();
 
@@ -139,7 +139,7 @@ public class Principal {
     }
 
     private static void ejecutarCSV(Scanner scanner) {
-        System.out.println(">> PERSISTENCIA EN CSV <<");
+        logger.info(">> PERSISTENCIA EN CSV <<");
         String ruta = solicitarRutaArchivo(scanner, ".csv", Constants.RUTA_CSV);
         IManejadorArchivos<List<Empleado>> manejador = new ManejadorCSV();
 
@@ -152,7 +152,7 @@ public class Principal {
     }
 
     private static void ejecutarJSON(Scanner scanner) {
-        System.out.println(">> PERSISTENCIA EN JSON <<");
+        logger.info(">> PERSISTENCIA EN JSON <<");
         String ruta = solicitarRutaArchivo(scanner, ".json", Constants.RUTA_JSON);
         IManejadorArchivos<Pedido> manejador = new ManejadorJSON();
 
@@ -166,7 +166,7 @@ public class Principal {
     }
 
     private static void ejecutarXML(Scanner scanner) {
-        System.out.println(">> PERSISTENCIA EN XML <<");
+        logger.info(">> PERSISTENCIA EN XML <<");
         String ruta = solicitarRutaArchivo(scanner, ".xml", Constants.RUTA_XML);
         IManejadorArchivos<Pedido> manejador = new ManejadorXML();
 
