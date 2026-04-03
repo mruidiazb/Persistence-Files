@@ -20,6 +20,8 @@ import java.util.Scanner;
  */
 public class Principal {
 
+    private static final String SEPARADOR = "\n-----------------------------------------\n";
+
     public static void main(String[] args) {
         // Asegurar que el directorio dinámico exista utilizando nuestra clase Constante
         File dir = new File(Constants.DIRECTORIO_BASE);
@@ -65,11 +67,11 @@ public class Principal {
                     break;
                 case 5:
                     ejecutarTXT(scanner);
-                    System.out.println("\n-----------------------------------------\n");
+                    System.out.println(SEPARADOR);
                     ejecutarCSV(scanner);
-                    System.out.println("\n-----------------------------------------\n");
+                    System.out.println(SEPARADOR);
                     ejecutarJSON(scanner);
-                    System.out.println("\n-----------------------------------------\n");
+                    System.out.println(SEPARADOR);
                     ejecutarXML(scanner);
                     break;
                 case 0:
@@ -118,7 +120,6 @@ public class Principal {
             }
         } catch (PersistenciaException e) {
             System.err.println("Falla de capa persistencia (TXT): " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -141,7 +142,6 @@ public class Principal {
             }
         } catch (PersistenciaException e) {
             System.err.println("Falla de capa persistencia (CSV): " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -166,7 +166,6 @@ public class Principal {
             }
         } catch (PersistenciaException e) {
             System.err.println("Falla de capa persistencia (JSON): " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -191,7 +190,6 @@ public class Principal {
             }
         } catch (PersistenciaException e) {
             System.err.println("Falla de capa persistencia (XML): " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
