@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.proyecto.persistencia.dominio.pedidos.Pedido;
 import com.proyecto.persistencia.excepciones.PersistenciaException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * Manejador JSON que implementa la interfaz genérica.
  */
 public class ManejadorJSON implements IManejadorArchivos<Pedido> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ManejadorJSON.class);
 
     private final ObjectMapper objectMapper;
 
@@ -26,7 +30,7 @@ public class ManejadorJSON implements IManejadorArchivos<Pedido> {
     public void guardar(Pedido pedido, String rutaArchivo) throws PersistenciaException {
         try {
             objectMapper.writeValue(new File(rutaArchivo), pedido);
-            System.out.println("Archivo JSON guardado exitosamente en: " + rutaArchivo);
+            logger.info("Archivo JSON guardado exitosamente en: {}", rutaArchivo);
         } catch (IOException e) {
             throw new com.proyecto.persistencia.excepciones.ErrorLecturaEscrituraException("Error al guardar archivo JSON: " + e.getMessage(), e);
         }
@@ -36,7 +40,7 @@ public class ManejadorJSON implements IManejadorArchivos<Pedido> {
     public Pedido leer(String rutaArchivo) throws PersistenciaException {
         try {
             Pedido pedido = objectMapper.readValue(new File(rutaArchivo), Pedido.class);
-            System.out.println("Archivo JSON leído exitosamente.");
+            logger.info("Archivo JSON leído exitosamente.");
             return pedido;
         } catch (FileNotFoundException e) {
             throw new com.proyecto.persistencia.excepciones.ArchivoNoEncontradoException("No se encontró el archivo JSON: " + rutaArchivo, e);

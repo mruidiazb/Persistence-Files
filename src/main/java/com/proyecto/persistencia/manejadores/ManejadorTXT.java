@@ -2,6 +2,8 @@ package com.proyecto.persistencia.manejadores;
 
 import com.proyecto.persistencia.dominio.biblioteca.Libro;
 import com.proyecto.persistencia.excepciones.PersistenciaException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +14,8 @@ import java.util.List;
  * Manejador de persistencia en TXT que implementa la interfaz genérica.
  */
 public class ManejadorTXT implements IManejadorArchivos<List<Libro>> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ManejadorTXT.class);
 
     @Override
     public void guardar(List<Libro> libros, String rutaArchivo) throws PersistenciaException {
@@ -27,7 +31,7 @@ public class ManejadorTXT implements IManejadorArchivos<List<Libro>> {
                 bw.write(linea);
                 bw.newLine();
             }
-            System.out.println("Archivo TXT guardado exitosamente en: " + rutaArchivo);
+            logger.info("Archivo TXT guardado exitosamente en: {}", rutaArchivo);
         } catch (IOException e) {
             throw new com.proyecto.persistencia.excepciones.ErrorLecturaEscrituraException("Error al guardar archivo TXT: " + e.getMessage(), e);
         }
@@ -53,7 +57,7 @@ public class ManejadorTXT implements IManejadorArchivos<List<Libro>> {
                     libros.add(libro);
                 }
             }
-            System.out.println("Archivo TXT leído exitosamente.");
+            logger.info("Archivo TXT leído exitosamente.");
             return libros;
         } catch (FileNotFoundException e) {
             throw new com.proyecto.persistencia.excepciones.ArchivoNoEncontradoException("No se encontró el archivo TXT: " + rutaArchivo, e);
