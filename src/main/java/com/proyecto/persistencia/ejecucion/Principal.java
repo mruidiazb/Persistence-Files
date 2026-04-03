@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Clase principal encargada de ejecutar pruebas de persistencia para todos los formatos.
@@ -26,25 +27,81 @@ public class Principal {
             dir.mkdirs();
         }
 
-        System.out.println("=========================================");
-        System.out.println("  INICIANDO EJEMPLOS DE PERSISTENCIA (OOP)");
-        System.out.println("=========================================\n");
+        Scanner scanner = new Scanner(System.in);
+        int opcion = 0;
 
-        ejecutarTXT();
-        System.out.println("\n-----------------------------------------\n");
-        ejecutarCSV();
-        System.out.println("\n-----------------------------------------\n");
-        ejecutarJSON();
-        System.out.println("\n-----------------------------------------\n");
-        ejecutarXML();
-        
+        do {
+            System.out.println("\n=========================================");
+            System.out.println("  MENÚ DE EJEMPLOS DE PERSISTENCIA (OOP)");
+            System.out.println("=========================================");
+            System.out.println("1. Ejecutar Persistencia en TXT  [Dominio: Biblioteca / Libro]");
+            System.out.println("2. Ejecutar Persistencia en CSV  [Dominio: Empresa / Empleado]");
+            System.out.println("3. Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]");
+            System.out.println("4. Ejecutar Persistencia en XML  [Dominio: Ventas / Pedido]");
+            System.out.println("5. Ejecutar Todos");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            try {
+                opcion = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                opcion = -1;
+            }
+
+            System.out.println();
+
+            switch (opcion) {
+                case 1:
+                    ejecutarTXT(scanner);
+                    break;
+                case 2:
+                    ejecutarCSV(scanner);
+                    break;
+                case 3:
+                    ejecutarJSON(scanner);
+                    break;
+                case 4:
+                    ejecutarXML(scanner);
+                    break;
+                case 5:
+                    ejecutarTXT(scanner);
+                    System.out.println("\n-----------------------------------------\n");
+                    ejecutarCSV(scanner);
+                    System.out.println("\n-----------------------------------------\n");
+                    ejecutarJSON(scanner);
+                    System.out.println("\n-----------------------------------------\n");
+                    ejecutarXML(scanner);
+                    break;
+                case 0:
+                    System.out.println("Saliendo del programa...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        } while (opcion != 0);
+
+        scanner.close();
+
         System.out.println("\n=========================================");
         System.out.println("            PROCESO FINALIZADO");
         System.out.println("=========================================");
     }
 
-    private static void ejecutarTXT() {
+    private static String solicitarRutaArchivo(Scanner scanner, String formatoExtension, String rutaPorDefecto) {
+        System.out.print("Ingrese el nombre para el archivo " + formatoExtension + " (Enter para usar el de por defecto): ");
+        String nombre = scanner.nextLine().trim();
+        if (nombre.isEmpty()) {
+            return rutaPorDefecto;
+        }
+        if (!nombre.toLowerCase().endsWith(formatoExtension.toLowerCase())) {
+            nombre += formatoExtension;
+        }
+        return Constants.DIRECTORIO_BASE + "/" + nombre;
+    }
+
+    private static void ejecutarTXT(Scanner scanner) {
         System.out.println(">> PERSISTENCIA EN TXT <<");
+        String ruta = solicitarRutaArchivo(scanner, ".txt", Constants.RUTA_TXT);
         IManejadorArchivos<List<Libro>> manejador = new ManejadorTXT();
 
         List<Libro> librosOriginales = new ArrayList<>();
@@ -53,8 +110,8 @@ public class Principal {
         librosOriginales.add(new Libro("L003", "Don Quijote", "Miguel de Cervantes", 1605));
 
         try {
-            manejador.guardar(librosOriginales, Constants.RUTA_TXT);
-            List<Libro> librosLeidos = manejador.leer(Constants.RUTA_TXT);
+            manejador.guardar(librosOriginales, ruta);
+            List<Libro> librosLeidos = manejador.leer(ruta);
             System.out.println("Datos recuperados del TXT:");
             for (Libro l : librosLeidos) {
                 System.out.println(" - " + l);
@@ -65,8 +122,9 @@ public class Principal {
         }
     }
 
-    private static void ejecutarCSV() {
+    private static void ejecutarCSV(Scanner scanner) {
         System.out.println(">> PERSISTENCIA EN CSV <<");
+        String ruta = solicitarRutaArchivo(scanner, ".csv", Constants.RUTA_CSV);
         IManejadorArchivos<List<Empleado>> manejador = new ManejadorCSV();
 
         List<Empleado> empleadosOriginales = new ArrayList<>();
@@ -75,8 +133,8 @@ public class Principal {
         empleadosOriginales.add(new Empleado(103, "Laura Sarmiento", "Recursos Humanos", 2100.00));
 
         try {
-            manejador.guardar(empleadosOriginales, Constants.RUTA_CSV);
-            List<Empleado> empleadosLeidos = manejador.leer(Constants.RUTA_CSV);
+            manejador.guardar(empleadosOriginales, ruta);
+            List<Empleado> empleadosLeidos = manejador.leer(ruta);
             System.out.println("Datos recuperados del CSV:");
             for (Empleado e : empleadosLeidos) {
                 System.out.println(" - " + e);
@@ -87,8 +145,9 @@ public class Principal {
         }
     }
 
-    private static void ejecutarJSON() {
+    private static void ejecutarJSON(Scanner scanner) {
         System.out.println(">> PERSISTENCIA EN JSON <<");
+        String ruta = solicitarRutaArchivo(scanner, ".json", Constants.RUTA_JSON);
         IManejadorArchivos<Pedido> manejador = new ManejadorJSON();
 
         List<Producto> productos = Arrays.asList(
@@ -98,8 +157,8 @@ public class Principal {
         Pedido pedidoOriginal = new Pedido("ORD-9988", "Empresa ABC S.A.", productos, 1551.00);
 
         try {
-            manejador.guardar(pedidoOriginal, Constants.RUTA_JSON);
-            Pedido pedidoLeido = manejador.leer(Constants.RUTA_JSON);
+            manejador.guardar(pedidoOriginal, ruta);
+            Pedido pedidoLeido = manejador.leer(ruta);
             System.out.println("Datos recuperados del JSON:");
             System.out.println(" - " + pedidoLeido);
             for(Producto p : pedidoLeido.getProductos()) {
@@ -111,8 +170,9 @@ public class Principal {
         }
     }
 
-    private static void ejecutarXML() {
+    private static void ejecutarXML(Scanner scanner) {
         System.out.println(">> PERSISTENCIA EN XML <<");
+        String ruta = solicitarRutaArchivo(scanner, ".xml", Constants.RUTA_XML);
         IManejadorArchivos<Pedido> manejador = new ManejadorXML();
 
         List<Producto> productos = Arrays.asList(
@@ -122,8 +182,8 @@ public class Principal {
         Pedido pedidoOriginal = new Pedido("ORD-5544", "Juan Perez", productos, 380.00);
 
         try {
-            manejador.guardar(pedidoOriginal, Constants.RUTA_XML);
-            Pedido pedidoLeido = manejador.leer(Constants.RUTA_XML);
+            manejador.guardar(pedidoOriginal, ruta);
+            Pedido pedidoLeido = manejador.leer(ruta);
             System.out.println("Datos recuperados del XML:");
             System.out.println(" - " + pedidoLeido);
             for(Producto p : pedidoLeido.getProductos()) {

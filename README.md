@@ -34,17 +34,21 @@ El proyecto está diseñado bajo una arquitectura de dominio orientada a objetos
 Para probar el proyecto puedes:
 1. Usando el IDE (Recomendado): Abre el proyecto, navega a `src/main/java/com/proyecto/persistencia/ejecucion/Principal.java` y haz clic derecho -> `Run Principal.main()`.
 2. Usando Maven (CLI): 
-   ```bash
-   mvn clean compile exec:java -Dexec.mainClass="com.proyecto.persistencia.ejecucion.Principal"
-   ```
+ 
+   mvn clean compile exec:java "-Dexec.mainClass=com.proyecto.persistencia.ejecucion.Principal"
 
-Una vez se ejecute con éxito, notarás que en el directorio `src/main/resources/files/` se han creado cuatro archivos nuevos:
-- `libros.txt`
-- `empleados.csv`
-- `pedido.json`
-- `pedido.xml`
 
-Puedes abrirlos con cualquier editor de texto para ver la información almacenada con sus respectivos formatos.
+Al ejecutar el proyecto se desplegará un menú interactivo en tu terminal que te permitirá seleccionar de forma individual o total cada formato, además de identificarlos por área del dominio:
+
+* `1.` Ejecutar Persistencia en TXT [Dominio: Biblioteca / Libro]
+* `2.` Ejecutar Persistencia en CSV [Dominio: Empresa / Empleado]
+* `3.` Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]
+* `4.` Ejecutar Persistencia en XML [Dominio: Ventas / Pedido]
+* `5.` Ejecutar Todos
+
+Adicionalmente, el programa te solicitará qué nombre de archivo deseas crear para cada ejecución. Si oprimes *Enter* sin escribir nada, usará los nombres por defecto (`libros.txt`, `empleados.csv`, `pedido.json`, `pedido.xml`).
+
+Todos estos archivos generados se almacenarán en el directorio `src/main/resources/files/` y podrás abrirlos para ver cómo persisten los objetos con sus respectivos formatos.
 
 ## Documentación Técnica
 
