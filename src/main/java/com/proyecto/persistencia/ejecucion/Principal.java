@@ -33,15 +33,15 @@ public class Principal {
         int opcion = 0;
 
         do {
-            System.out.println("\n=========================================");
-            System.out.println("  MENÚ DE EJEMPLOS DE PERSISTENCIA (OOP)");
-            System.out.println("=========================================");
-            System.out.println("1. Ejecutar Persistencia en TXT  [Dominio: Biblioteca / Libro]");
-            System.out.println("2. Ejecutar Persistencia en CSV  [Dominio: Empresa / Empleado]");
-            System.out.println("3. Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]");
-            System.out.println("4. Ejecutar Persistencia en XML  [Dominio: Ventas / Pedido]");
-            System.out.println("5. Ejecutar Todos");
-            System.out.println("0. Salir");
+            System.out.println("\n========================================="
+                    + "\n  MENÚ DE EJEMPLOS DE PERSISTENCIA (OOP)"
+                    + "\n========================================="
+                    + "\n1. Ejecutar Persistencia en TXT  [Dominio: Biblioteca / Libro]"
+                    + "\n2. Ejecutar Persistencia en CSV  [Dominio: Empresa / Empleado]"
+                    + "\n3. Ejecutar Persistencia en JSON [Dominio: Ventas / Pedido]"
+                    + "\n4. Ejecutar Persistencia en XML  [Dominio: Ventas / Pedido]"
+                    + "\n5. Ejecutar Todos"
+                    + "\n0. Salir");
             System.out.print("Seleccione una opción: ");
 
             try {
@@ -84,9 +84,9 @@ public class Principal {
 
         scanner.close();
 
-        System.out.println("\n=========================================");
-        System.out.println("            PROCESO FINALIZADO");
-        System.out.println("=========================================");
+        System.out.println("\n========================================="
+                + "\n            PROCESO FINALIZADO"
+                + "\n=========================================");
     }
 
     private static String solicitarRutaArchivo(Scanner scanner, String formatoExtension, String rutaPorDefecto) {
