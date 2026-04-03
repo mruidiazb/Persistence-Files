@@ -1,0 +1,16 @@
+{
+  "numeroPedido" : "ORD-9988",
+  "cliente" : "Empresa ABC S.A.",
+  "productos" : [ {
+    "codigo" : "P01",
+    "nombre" : "Laptop Dell",
+    "cantidad" : 1,
+    "precioUnitario" : 1500.0
+  }, {
+    "codigo" : "P02",
+    "nombre" : "Mouse Inalámbrico",
+    "cantidad" : 2,
+    "precioUnitario" : 25.5
+  } ],
+  "total" : 1551.0
+}

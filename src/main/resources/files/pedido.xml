@@ -1,0 +1,19 @@
+<Pedido>
+  <numeroPedido>ORD-5544</numeroPedido>
+  <cliente>Juan Perez</cliente>
+  <productos>
+    <productos>
+      <codigo>P03</codigo>
+      <nombre>Teclado Mecánico</nombre>
+      <cantidad>1</cantidad>
+      <precioUnitario>80.0</precioUnitario>
+    </productos>
+    <productos>
+      <codigo>P04</codigo>
+      <nombre>Monitor 24 pulgadas</nombre>
+      <cantidad>2</cantidad>
+      <precioUnitario>150.0</precioUnitario>
+    </productos>
+  </productos>
+  <total>380.0</total>
+</Pedido>
