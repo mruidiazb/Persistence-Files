@@ -101,6 +101,30 @@ public class Principal {
         return Constants.DIRECTORIO_BASE + "/" + nombre;
     }
 
+    private static <T> void ejecutarFlujoPersistencia(IManejadorArchivos<T> manejador, T datosOriginales, String ruta, String formato) {
+        try {
+            manejador.guardar(datosOriginales, ruta);
+            T datosLeidos = manejador.leer(ruta);
+            System.out.println("Datos recuperados del " + formato + ":");
+            
+            if (datosLeidos instanceof Iterable) {
+                for (Object item : (Iterable<?>) datosLeidos) {
+                    System.out.println(" - " + item);
+                }
+            } else if (datosLeidos instanceof Pedido) {
+                Pedido pedido = (Pedido) datosLeidos;
+                System.out.println(" - " + pedido);
+                for (Producto p : pedido.getProductos()) {
+                    System.out.println("   * " + p);
+                }
+            } else {
+                System.out.println(" - " + datosLeidos);
+            }
+        } catch (PersistenciaException e) {
+            System.err.println("Falla de capa persistencia (" + formato + "): " + e.getMessage());
+        }
+    }
+
     private static void ejecutarTXT(Scanner scanner) {
         System.out.println(">> PERSISTENCIA EN TXT <<");
         String ruta = solicitarRutaArchivo(scanner, ".txt", Constants.RUTA_TXT);
@@ -111,16 +135,7 @@ public class Principal {
         librosOriginales.add(new Libro("L002", "El Aleph", "Jorge Luis Borges", 1949));
         librosOriginales.add(new Libro("L003", "Don Quijote", "Miguel de Cervantes", 1605));
 
-        try {
-            manejador.guardar(librosOriginales, ruta);
-            List<Libro> librosLeidos = manejador.leer(ruta);
-            System.out.println("Datos recuperados del TXT:");
-            for (Libro l : librosLeidos) {
-                System.out.println(" - " + l);
-            }
-        } catch (PersistenciaException e) {
-            System.err.println("Falla de capa persistencia (TXT): " + e.getMessage());
-        }
+        ejecutarFlujoPersistencia(manejador, librosOriginales, ruta, "TXT");
     }
 
     private static void ejecutarCSV(Scanner scanner) {
@@ -133,16 +148,7 @@ public class Principal {
         empleadosOriginales.add(new Empleado(102, "Carlos Gomez", "IT", 3800.75));
         empleadosOriginales.add(new Empleado(103, "Laura Sarmiento", "Recursos Humanos", 2100.00));
 
-        try {
-            manejador.guardar(empleadosOriginales, ruta);
-            List<Empleado> empleadosLeidos = manejador.leer(ruta);
-            System.out.println("Datos recuperados del CSV:");
-            for (Empleado e : empleadosLeidos) {
-                System.out.println(" - " + e);
-            }
-        } catch (PersistenciaException e) {
-            System.err.println("Falla de capa persistencia (CSV): " + e.getMessage());
-        }
+        ejecutarFlujoPersistencia(manejador, empleadosOriginales, ruta, "CSV");
     }
 
     private static void ejecutarJSON(Scanner scanner) {
@@ -156,17 +162,7 @@ public class Principal {
         );
         Pedido pedidoOriginal = new Pedido("ORD-9988", "Empresa ABC S.A.", productos, 1551.00);
 
-        try {
-            manejador.guardar(pedidoOriginal, ruta);
-            Pedido pedidoLeido = manejador.leer(ruta);
-            System.out.println("Datos recuperados del JSON:");
-            System.out.println(" - " + pedidoLeido);
-            for(Producto p : pedidoLeido.getProductos()) {
-                System.out.println("   * " + p);
-            }
-        } catch (PersistenciaException e) {
-            System.err.println("Falla de capa persistencia (JSON): " + e.getMessage());
-        }
+        ejecutarFlujoPersistencia(manejador, pedidoOriginal, ruta, "JSON");
     }
 
     private static void ejecutarXML(Scanner scanner) {
@@ -180,16 +176,6 @@ public class Principal {
         );
         Pedido pedidoOriginal = new Pedido("ORD-5544", "Juan Perez", productos, 380.00);
 
-        try {
-            manejador.guardar(pedidoOriginal, ruta);
-            Pedido pedidoLeido = manejador.leer(ruta);
-            System.out.println("Datos recuperados del XML:");
-            System.out.println(" - " + pedidoLeido);
-            for(Producto p : pedidoLeido.getProductos()) {
-                System.out.println("   * " + p);
-            }
-        } catch (PersistenciaException e) {
-            System.err.println("Falla de capa persistencia (XML): " + e.getMessage());
-        }
+        ejecutarFlujoPersistencia(manejador, pedidoOriginal, ruta, "XML");
     }
 }
